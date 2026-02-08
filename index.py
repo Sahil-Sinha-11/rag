@@ -2,6 +2,7 @@ from pathlib import Path
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.vectorstores import QdrantVectorStore
 
 path_pdf = Path(__file__).parent / "node.pdf"
 
@@ -21,6 +22,14 @@ chunks = text_splitter.split_documents(documents=docs)
 
 #vectrize the chunks
 
+# vector embeddings
+
 embedding_model = OpenAIEmbeddings(
     model="text-embedding-3-large"
+)
+
+vector_store=QdrantVectorStore.from_documents(
+    documents = chunks,
+    embedding=embedding_model,
+    url = "http"
 )
