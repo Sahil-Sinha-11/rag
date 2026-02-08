@@ -1,8 +1,11 @@
+from dotenv import load_dotenv
 from pathlib import Path
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.vectorstores import QdrantVectorStore
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_qdrant import QdrantVectorStore
+
+load_dotenv()
 
 path_pdf = Path(__file__).parent / "node.pdf"
 
@@ -31,5 +34,8 @@ embedding_model = OpenAIEmbeddings(
 vector_store=QdrantVectorStore.from_documents(
     documents = chunks,
     embedding=embedding_model,
-    url = "http"
+    url = "http://localhost:6333",
+    collection_name="langchain-docs"
 )
+
+print("indexing done");
